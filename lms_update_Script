@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Get the absolute path of the directory where the script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+
+# Check if the script is in the bin directory
+BIN_DIR="/bin"
+if [[ "${SCRIPT_DIR}" != "${BIN_DIR}" ]]; then
+    # Copy the script to the bin directory
+    sudo mv "${BASH_SOURCE[0]}" "${BIN_DIR}" >/dev/null 2>&1
+fi
+
+# Make the script executable
+sudo chmod +x "${BIN_DIR}/$(basename "${BASH_SOURCE[0]}")" >/dev/null 2>&1
+
+# Remember the current directory
+CURRENT_DIR="$(pwd)"
+
+# Go to home and run the git clone command
+cd "${HOME}" >/dev/null 2>&1
+git clone https://github.com/markdicks/wtc_scripts.git >/dev/null 2>&1 && sh wtc_scripts/update_lms.sh
+
+# Go back to the original directory
+cd "${CURRENT_DIR}" >/dev/null 2>&1
